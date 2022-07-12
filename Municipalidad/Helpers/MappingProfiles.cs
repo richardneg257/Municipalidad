@@ -9,6 +9,8 @@ namespace Municipalidad.Abastecimiento.WebAPI.Helpers
         public MappingProfiles()
         {
             CreateMap<Estado, GetEstadoDto>();
+            CreateMap<Producto, GetProductoDto>();
+            CreateMap<Area, GetAreaDto>();
         }
     }
 }
