@@ -29,6 +29,16 @@ namespace Municipalidad.Abastecimiento.WebAPI.Controllers
             return mapper.Map<List<GetProductoDto>>(await context.Productos.ToListAsync());
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<GetProductoDto>> GetById(int id)
+        {
+            var entity = await context.Productos.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity == null) return NotFound();
+
+            return mapper.Map<GetProductoDto>(entity);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post([FromForm] ProductoCreacionDto productoCreacionDto)
         {
@@ -38,6 +48,18 @@ namespace Municipalidad.Abastecimiento.WebAPI.Controllers
                 productoEntity.Photo = await almacenadorArchivos.GuardarArchivo(contenedor, productoCreacionDto.Photo);
             }
             context.Add(productoEntity);
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var existe = await context.Productos.AnyAsync(x => x.Id == id);
+
+            if (!existe) return NotFound();
+
+            context.Remove(new Producto() { Id = id });
             await context.SaveChangesAsync();
             return NoContent();
         }
