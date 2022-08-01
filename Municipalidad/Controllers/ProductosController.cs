@@ -52,15 +52,36 @@ namespace Municipalidad.Abastecimiento.WebAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id:int}")]
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, [FromForm] ProductoCreacionDto productoCreacionDto)
+        {
+            var entity = await context.Productos.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entity == null) return NotFound();
+
+            entity = mapper.Map(productoCreacionDto, entity);
+
+            if (productoCreacionDto.Photo != null)
+            {
+                entity.Photo = await almacenadorArchivos.EditarArchivo(contenedor, productoCreacionDto.Photo, entity.Photo);
+            }
+
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var existe = await context.Productos.AnyAsync(x => x.Id == id);
+            var entity = await context.Productos.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (!existe) return NotFound();
+            if (entity == null) return NotFound();
 
-            context.Remove(new Producto() { Id = id });
+            context.Remove(entity);
             await context.SaveChangesAsync();
+
+            await almacenadorArchivos.BorrarArchivo(entity.Photo, contenedor);
+
             return NoContent();
         }
     }
