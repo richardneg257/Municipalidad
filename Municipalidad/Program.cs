@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Municipalidad.Abastecimiento.WebAPI.Helpers;
 using Municipalidad.Abastecimiento.WebAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MunicipalidadLaredoContext>(optionsBuilder =>
     optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DBContext")));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("mycors", builder =>
@@ -32,6 +35,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("mycors");
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

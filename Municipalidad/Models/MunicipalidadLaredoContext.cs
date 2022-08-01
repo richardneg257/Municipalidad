@@ -32,7 +32,7 @@ namespace Municipalidad.Abastecimiento.WebAPI.Models
 
             modelBuilder.Entity<Estado>(entity =>
             {
-                entity.Property(e => e.Color).HasMaxLength(6);
+                entity.Property(e => e.Color).HasMaxLength(7);
 
                 entity.Property(e => e.Nombre).HasMaxLength(50);
             });

@@ -11,6 +11,8 @@ namespace Municipalidad.Abastecimiento.WebAPI.Helpers
             CreateMap<Estado, GetEstadoDto>();
             CreateMap<Producto, GetProductoDto>();
             CreateMap<Area, GetAreaDto>();
+            CreateMap<ProductoCreacionDto, Producto>()
+                .ForMember(x => x.Photo, options => options.Ignore());
         }
     }
 }
